@@ -68,3 +68,10 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+# Install library 
+If you already have a `package.json` file in your project﻿
+Right-click the package.json file in the editor or in the Project tool window and choose Run `npm install` from the context menu.
+
+Alternatively, run npm install in the Terminal Alt
+F12.

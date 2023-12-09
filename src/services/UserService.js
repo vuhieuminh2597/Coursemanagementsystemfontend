@@ -1,7 +1,7 @@
-import axios from "axios";
+import customizeAxios from "./customize-axios";
 
-const fetchAllUser = () => {
-    return  axios.get("http://localhost:8080/api/v1/Student");
+const fetchAllUser = (page) => {
+    return  customizeAxios.get(`/api/users?page=${page}`);
 }
 
 export {fetchAllUser};
