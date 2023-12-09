@@ -2,13 +2,19 @@ import Table from 'react-bootstrap/Table';
 import {useEffect, useState} from "react";
 import {fetchAllUser} from "../services/UserService";
 import ReactPaginate from 'react-paginate';
-
+import ModalAddNewUser from "./ModalAddNewUser";
 
 const TableUsers = (props) => {
     const [listUsers, setListUsers] = useState([]);//Lấy danh sách nguời dùng
     const [totalUsers, setTotalUsers] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
-
+    const [isShowModalAddNew, setIsShowModalAddNew] = useState(false);
+    const handleClose = () => {
+        setIsShowModalAddNew(false);
+    }
+    const handleUpdateTable = (user) => {
+        setListUsers([user,...listUsers]);
+    }
     useEffect(() => {
         getUsers(1)
     }, [])
@@ -19,16 +25,11 @@ const TableUsers = (props) => {
         if (res && res.data) {
             setTotalUsers(res.total);//Lấy ra tổng số phần tử
             setTotalPages(res.total_pages);//Lấy ra số page
+            // console.log(">>> check data",res.data);
             setListUsers(res.data);
         }
     }
 
-    // address
-    // birthDay
-    // email
-    // id
-    // name
-    // phoneNumber
 
     const handlePageClick = (event) => {//event onclick
         getUsers(event.selected + 1);
@@ -36,16 +37,19 @@ const TableUsers = (props) => {
 
     return (
         <>
+            <div className=" my-3 add-new">
+                <span> <b>List Users:</b> </span>
+                <button className="btn btn-primary" type="submit"
+                        onClick={() => setIsShowModalAddNew(true)}>Add new user
+                </button>
+            </div>
 
             <Table striped bordered hover>
                 <thead>
                 <tr>
                     <th>ID</th>
-                    {/*<th>Full Name</th>*/}
-                    {/*<th>Birth Day</th>*/}
-                    {/*<th>Address</th>*/}
+                    <th>First name</th>
                     <th>Email</th>
-                    {/*<th>Phone Number</th>*/}
                 </tr>
                 </thead>
                 <tbody>
@@ -54,11 +58,8 @@ const TableUsers = (props) => {
                         return (
                             <tr key={`users-${index}`}>
                                 <td>{item.id}</td>
-                                {/*<td>{item.name}</td>*/}
-                                {/*<td>{item.birthDay}</td>*/}
-                                {/*<td>{item.address}</td>*/}
+                                <td>{item.first_name}</td>
                                 <td>{item.email}</td>
-                                {/*<td>{item.phoneNumber}</td>*/}
                             </tr>
                         )
                     })
@@ -83,6 +84,12 @@ const TableUsers = (props) => {
                 breakLinkClassName="page-link"
                 containerClassName="pagination"
                 activeClassName="active"
+            />
+
+            <ModalAddNewUser
+                show={isShowModalAddNew}
+                handleClose={handleClose}
+                handleUpdateTable={handleUpdateTable}
             />
         </>);
 }
