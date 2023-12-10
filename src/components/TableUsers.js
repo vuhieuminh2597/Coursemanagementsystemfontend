@@ -6,28 +6,28 @@ import ModalAddNewUser from "./ModalAddNewUser";
 
 const TableUsers = (props) => {
     const [listUsers, setListUsers] = useState([]);//Lấy danh sách nguời dùng
-    const [totalUsers, setTotalUsers] = useState(0);
-    const [totalPages, setTotalPages] = useState(0);
+    // const [totalUsers, setTotalUsers] = useState(0);
+    // const [totalPages, setTotalPages] = useState(0);
     const [isShowModalAddNew, setIsShowModalAddNew] = useState(false);
     const handleClose = () => {
         setIsShowModalAddNew(false);
     }
     const handleUpdateTable = (user) => {
-        setListUsers([user,...listUsers]);
+        setListUsers([user, ...listUsers]);
     }
     useEffect(() => {
         getUsers(1)
     }, [])
 
     const getUsers = async (page) => {
-        let res = await fetchAllUser(page);
-        // console.log('>>> check data',res)
-        if (res && res.data) {
-            setTotalUsers(res.total);//Lấy ra tổng số phần tử
-            setTotalPages(res.total_pages);//Lấy ra số page
+        let res = await fetchAllUser();
+        console.log('>>> check data',res)
+
+            // setTotalUsers(12);//Lấy ra tổng số phần tử
+            // setTotalPages(6);//Lấy ra số page
             // console.log(">>> check data",res.data);
-            setListUsers(res.data);
-        }
+            setListUsers(res);
+
     }
 
 
@@ -48,8 +48,12 @@ const TableUsers = (props) => {
                 <thead>
                 <tr>
                     <th>ID</th>
-                    <th>First name</th>
+                    <th>Name</th>
                     <th>Email</th>
+                    <th>Birth Day</th>
+                    <th>Address</th>
+                    <th>Gender</th>
+                    <th>phone</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -58,8 +62,12 @@ const TableUsers = (props) => {
                         return (
                             <tr key={`users-${index}`}>
                                 <td>{item.id}</td>
-                                <td>{item.first_name}</td>
+                                <td>{item.name}</td>
                                 <td>{item.email}</td>
+                                <td>{item.birthDay}</td>
+                                <td>{item.address}</td>
+                                <td>{item.gender}</td>
+                                <td>{item.phone}</td>
                             </tr>
                         )
                     })
@@ -72,7 +80,7 @@ const TableUsers = (props) => {
                 nextLabel="next >"
                 onPageChange={handlePageClick}
                 pageRangeDisplayed={5}
-                pageCount={totalPages}
+                pageCount={2}
                 previousLabel="< previous"
                 pageClassName="page-item"
                 pageLinkClassName="page-link"
