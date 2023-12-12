@@ -3,14 +3,19 @@ import {useEffect, useState} from "react";
 import {fetchAllUser} from "../services/UserService";
 import ReactPaginate from 'react-paginate';
 import ModalAddNewUser from "./ModalAddNewUser";
+import ModalEditUser from "./ModalEditUser";
+import _ from "lodash";
 
 const TableUsers = (props) => {
     const [listUsers, setListUsers] = useState([]);//Lấy danh sách nguời dùng
-    // const [totalUsers, setTotalUsers] = useState(0);
-    // const [totalPages, setTotalPages] = useState(0);
+    const [totalUsers, setTotalUsers] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
     const [isShowModalAddNew, setIsShowModalAddNew] = useState(false);
+    const [isShowModalEdit,setIsShowModalEdit] = useState(false)
+    const [dataEditUser,setDataEditUser] = useState({});
     const handleClose = () => {
         setIsShowModalAddNew(false);
+        setIsShowModalEdit(false);
     }
     const handleUpdateTable = (user) => {
         setListUsers([user, ...listUsers]);
@@ -20,21 +25,33 @@ const TableUsers = (props) => {
     }, [])
 
     const getUsers = async (page) => {
-        let res = await fetchAllUser();
-        console.log('>>> check data',res)
-
-            // setTotalUsers(12);//Lấy ra tổng số phần tử
-            // setTotalPages(6);//Lấy ra số page
-            // console.log(">>> check data",res.data);
-            setListUsers(res);
-
+        let res = await fetchAllUser(page);
+        // console.log('>>> check data', res);
+        setTotalUsers(res.totalElements);//Lấy ra tổng số phần tử
+        setTotalPages(res.totalPages);//Lấy ra số page
+        if (res) {
+            setListUsers(res.content);
+        }
     }
-
-
     const handlePageClick = (event) => {//event onclick
         getUsers(event.selected + 1);
     }
+    const handleEditUser = (user) => {
+        setDataEditUser(user);
+        setIsShowModalEdit(true);
+    }
 
+    const handleEditUserFromModal = (user) => {
+        let copyListUser = _.cloneDeep(listUsers);//trỏ tới địa chỉ bộ nhớ other không trùng với listUser
+        let index = listUsers.findIndex(item => item.id === user.id);
+        copyListUser[index].name = user.name;
+        copyListUser[index].email = user.email;
+        copyListUser[index].address = user.address;
+        copyListUser[index].birthDay = user.birthDay;
+        copyListUser[index].gender = user.gender;
+        copyListUser[index].phone = user.phone;
+        setListUsers(copyListUser);
+    }
     return (
         <>
             <div className=" my-3 add-new">
@@ -54,6 +71,7 @@ const TableUsers = (props) => {
                     <th>Address</th>
                     <th>Gender</th>
                     <th>phone</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -68,6 +86,11 @@ const TableUsers = (props) => {
                                 <td>{item.address}</td>
                                 <td>{item.gender}</td>
                                 <td>{item.phone}</td>
+                                <td>
+                                    <button className='btn-warning mx-3 my-1'
+                                            onClick={() => handleEditUser(item)}>Edit</button>
+                                    <button className='btn-danger'>Delete</button>
+                                </td>
                             </tr>
                         )
                     })
@@ -80,7 +103,7 @@ const TableUsers = (props) => {
                 nextLabel="next >"
                 onPageChange={handlePageClick}
                 pageRangeDisplayed={5}
-                pageCount={2}
+                pageCount={totalPages}
                 previousLabel="< previous"
                 pageClassName="page-item"
                 pageLinkClassName="page-link"
@@ -99,6 +122,13 @@ const TableUsers = (props) => {
                 handleClose={handleClose}
                 handleUpdateTable={handleUpdateTable}
             />
+            <ModalEditUser
+                show={isShowModalEdit}
+                handleClose={handleClose}
+                dataUserEdit={dataEditUser}
+                handleEditUserFromModal={handleEditUserFromModal}
+            />
+
         </>);
 }
 
