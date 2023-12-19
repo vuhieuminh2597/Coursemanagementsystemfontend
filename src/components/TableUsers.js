@@ -29,8 +29,8 @@ const TableUsers = (props) => {
         // console.log('>>> check data', res);
         setTotalUsers(res.totalElements);//Lấy ra tổng số phần tử
         setTotalPages(res.totalPages);//Lấy ra số page
-        if (res) {
-            setListUsers(res.content);
+        if (res && res.data) {
+            setListUsers(res.data);//add Data
         }
     }
     const handlePageClick = (event) => {//event onclick
