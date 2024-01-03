@@ -18,6 +18,7 @@ const ModalEditUser = (props) => {
     const handleEditUser = async () => {
         const res = await putUpdateUser(id,name,email,birthDay,address,gender,phone);
         if(handleClose){
+            setId('');
             setName('');
             setEmail('');
             setBirthDay('');
@@ -49,44 +50,49 @@ const ModalEditUser = (props) => {
 
     return (
         <>
-            <Modal show={show} onHide={handleClose}>
+            <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Add new user</Modal.Title>
+                    <Modal.Title>Update Customer</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className='body-add-new'>
                         <div className="mb-3">
-                            <label className="form-label">Name</label>
+                            <label className="form-label">ID:</label>
+                            <input className="form-control" value={id}
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <label className="form-label">Name:</label>
                             <input type="text" className="form-control" value={name}
                                    onChange={(event) => setName(event.target.value)}//Lấy value
                             />
                         </div>
                         <div className="mb-3">
-                            <label className="form-label">Email</label>
+                            <label className="form-label">Email:</label>
                             <input type="text" className="form-control" value={email}
                                    onChange={(event) => setEmail(event.target.value)}
                             />
                         </div>
                         <div className="mb-3">
-                            <label className="form-label">Birth day</label>
+                            <label className="form-label">Birth day:</label>
                             <input type="text" className="form-control" value={birthDay}
                                    onChange={(event) => setBirthDay(event.target.value)}
                             />
                         </div>
                         <div className="mb-3">
-                            <label className="form-label">Address</label>
+                            <label className="form-label">Address:</label>
                             <input type="text" className="form-control" value={address}
                                    onChange={(event) => setAddress(event.target.value)}
                             />
                         </div>
                         <div className="mb-3">
-                            <label className="form-label">Gender</label>
+                            <label className="form-label">Gender:</label>
                             <input type="text" className="form-control" value={gender}
                                    onChange={(event) => setGender(event.target.value)}
                             />
                         </div>
                         <div className="mb-3">
-                            <label className="form-label">Phone</label>
+                            <label className="form-label">Phone:</label>
                             <input type="text" className="form-control" value={phone}
                                    onChange={(event) => setPhone(event.target.value)}
                             />
