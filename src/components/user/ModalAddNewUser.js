@@ -1,12 +1,12 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import {useEffect, useState} from "react";
-import {putUpdateUser} from '../services/UserService'
-import {toast} from "react-toastify";
+import {useState} from "react";
+import {postCreateUser} from "../../services/UserService"
+import {toast} from 'react-toastify';
 
-const ModalEditUser = (props) => {
-    const {show, handleClose,dataUserEdit, handleEditUserFromModal} = props;
-    const [id,setId] = useState(0);
+const ModalAddNewUser = (props) => {
+    const {show, handleClose, handleUpdateTable} = props;
+    const [id, setId] = useState("");
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [birthDay, setBirthDay] = useState("");
@@ -14,10 +14,11 @@ const ModalEditUser = (props) => {
     const [gender, setGender] = useState("");
     const [phone, setPhone] = useState("");
 
-
-    const handleEditUser = async () => {
-        const res = await putUpdateUser(id,name,email,birthDay,address,gender,phone);
-        if(handleClose){
+    const handleSaveUser = async () => {
+        let res = await postCreateUser(id,name, email, birthDay, address, gender, phone);
+        // console.log(">>>> check res ", res)
+        if (res && res.id) {
+            handleClose();
             setId('');
             setName('');
             setEmail('');
@@ -25,75 +26,63 @@ const ModalEditUser = (props) => {
             setAddress('');
             setGender('');
             setPhone('');
-        }
-        if(res && res.id){
-            handleClose();
-            handleEditUserFromModal({id,name,email,birthDay,address,gender,phone});
-            toast("Edit a user success!");
-        }else {
-            toast("Edit a user failed!");
+            handleUpdateTable({
+                name: name, id: res.id, email: email, birthDay: birthDay, address: address, gender: gender
+                , phone: phone
+            });
+            toast.success("A User is created success!");
+        } else {
+            toast.error("A User is created failed!");
         }
     }
-
-    useEffect(() => {
-        if (show){//Khi mở ModalEdit
-            setId(dataUserEdit.id);
-            setName(dataUserEdit.name);
-            setEmail(dataUserEdit.email);
-            setBirthDay(dataUserEdit.birthDay);
-            setAddress(dataUserEdit.address);
-            setGender(dataUserEdit.gender);
-            setPhone(dataUserEdit.phone);
-        }
-    }, [dataUserEdit]);//Nếu data thay đổi khi nhấn edit
-    // console.log(">>> Check Data :",dataUserEdit);
-
     return (
         <>
             <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Update Customer</Modal.Title>
+                    <Modal.Title>Add new user</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                    <a href={"https://www.uuidgenerator.net/"} target={"_blank"}>Get UUID ONLINE</a>
                     <div className='body-add-new'>
                         <div className="mb-3">
                             <label className="form-label">ID:</label>
-                            <input className="form-control" value={id}
+                            <input type="text" className="form-control" id="floatingInput" placeholder="Ex:8c9dfce4-3cba-4d8a-8849-5ba24b61e94"
+                                   onChange={(event) => setId(event.target.value)}//Lấy value
                             />
                         </div>
                         <div className="mb-3">
                             <label className="form-label">Name:</label>
-                            <input type="text" className="form-control" value={name}
+                            <input type="text" className="form-control"
                                    onChange={(event) => setName(event.target.value)}//Lấy value
                             />
                         </div>
                         <div className="mb-3">
                             <label className="form-label">Email:</label>
-                            <input type="text" className="form-control" value={email}
+                            <input type="text" className="form-control"
                                    onChange={(event) => setEmail(event.target.value)}
                             />
                         </div>
                         <div className="mb-3">
                             <label className="form-label">Birth day:</label>
-                            <input type="text" className="form-control" value={birthDay}
+                            <input type="text" className="form-control"
                                    onChange={(event) => setBirthDay(event.target.value)}
                             />
                         </div>
                         <div className="mb-3">
                             <label className="form-label">Address:</label>
-                            <input type="text" className="form-control" value={address}
+                            <input type="text" className="form-control"
                                    onChange={(event) => setAddress(event.target.value)}
                             />
                         </div>
                         <div className="mb-3">
                             <label className="form-label">Gender:</label>
-                            <input type="text" className="form-control" value={gender}
+                            <input type="text" className="form-control"
                                    onChange={(event) => setGender(event.target.value)}
                             />
                         </div>
                         <div className="mb-3">
                             <label className="form-label">Phone:</label>
-                            <input type="text" className="form-control" value={phone}
+                            <input type="text" className="form-control"
                                    onChange={(event) => setPhone(event.target.value)}
                             />
                         </div>
@@ -104,7 +93,7 @@ const ModalEditUser = (props) => {
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={() => handleEditUser()}>
+                    <Button variant="primary" onClick={() => handleSaveUser()}>
                         Confirm
                     </Button>
                 </Modal.Footer>
@@ -113,4 +102,4 @@ const ModalEditUser = (props) => {
 
     )
 }
-export default ModalEditUser;
+export default ModalAddNewUser;
