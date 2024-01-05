@@ -6,87 +6,57 @@ import {toast} from "react-toastify";
 import {registrationCourse} from "../../services/CourseService";
 
 const ModalRegis = (props) => {
-    const {show, handleClose,dataUserEdit, handleEditUserFromModal} = props;
-    const [idUser,setIdUser] = useState(0);
-    const [idCourse,setIdCourse] = useState(0);
-    const [name, setName] = useState("");
+    const {show, handleClose,dataRegisCourse, handleRegisUserFromModal} = props;
+    const [idUser,setIdUser] = useState("");
+    const [idCourse,setIdCourse] = useState("");
+    const [nameCourse, setNameCourse] = useState("");
 
-
-    const handleEditUser = async () => {
+    // console.log(">>>>Check" ,show);
+    const handleRegisUser = async () => {
         const res = await registrationCourse(idUser,idCourse);
+        console.log(">>>>>DAta",res)
         if(handleClose){
-            setId('');
-            setName('');
+            setIdCourse('');
+            setNameCourse('');
         }
         if(res){
             handleClose();
-            handleEditUserFromModal({idCourse,name});
-            toast("Registration this course success!");
+            toast.success("Registration this course success!");
         }else {
-            toast("Registration this course failed!");
+            toast.error("Registration this course failed!");
         }
     }
 
     useEffect(() => {
         if (show){//Khi mở ModalEdit
-            // s(dataUserEdit.id);
-            // setName(dataUserEdit.name);
-            // setEmail(dataUserEdit.email);
-            // setBirthDay(dataUserEdit.birthDay);
-            // setAddress(dataUserEdit.address);
-            // setGender(dataUserEdit.gender);
-            // setPhone(dataUserEdit.phone);
+            setIdCourse(dataRegisCourse.id)
+            setNameCourse(dataRegisCourse.name);
         }
-    }, [dataUserEdit]);//Nếu data thay đổi khi nhấn edit
+    }, [dataRegisCourse]);//Nếu data thay đổi khi nhấn edit
     // console.log(">>> Check Data :",dataUserEdit);
 
     return (
         <>
             <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Update Customer</Modal.Title>
+                    <Modal.Title>Register course</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className='body-add-new'>
                         <div className="mb-3">
-                            <label className="form-label">ID:</label>
-                            <input className="form-control" value={id}
+                            <label className="form-label">ID course:</label>
+                            <input className="form-control" value={idCourse}
                             />
                         </div>
                         <div className="mb-3">
-                            <label className="form-label">Name:</label>
-                            <input type="text" className="form-control" value={name}
-                                   onChange={(event) => setName(event.target.value)}//Lấy value
+                            <label className="form-label">Name course:</label>
+                            <input className="form-control" value={nameCourse}
                             />
                         </div>
                         <div className="mb-3">
-                            <label className="form-label">Email:</label>
-                            <input type="text" className="form-control" value={email}
-                                   onChange={(event) => setEmail(event.target.value)}
-                            />
-                        </div>
-                        <div className="mb-3">
-                            <label className="form-label">Birth day:</label>
-                            <input type="text" className="form-control" value={birthDay}
-                                   onChange={(event) => setBirthDay(event.target.value)}
-                            />
-                        </div>
-                        <div className="mb-3">
-                            <label className="form-label">Address:</label>
-                            <input type="text" className="form-control" value={address}
-                                   onChange={(event) => setAddress(event.target.value)}
-                            />
-                        </div>
-                        <div className="mb-3">
-                            <label className="form-label">Gender:</label>
-                            <input type="text" className="form-control" value={gender}
-                                   onChange={(event) => setGender(event.target.value)}
-                            />
-                        </div>
-                        <div className="mb-3">
-                            <label className="form-label">Phone:</label>
-                            <input type="text" className="form-control" value={phone}
-                                   onChange={(event) => setPhone(event.target.value)}
+                            <label className="form-label">Add id user:</label>
+                            <input type="text" className="form-control"
+                                   onChange={(event) => setIdUser(event.target.value)}//Lấy value
                             />
                         </div>
                     </div>
@@ -96,7 +66,7 @@ const ModalRegis = (props) => {
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={() => handleEditUser()}>
+                    <Button variant="primary" onClick={() => handleRegisUser()}>
                         Confirm
                     </Button>
                 </Modal.Footer>

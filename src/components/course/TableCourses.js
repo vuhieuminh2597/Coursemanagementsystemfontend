@@ -2,13 +2,16 @@ import Table from 'react-bootstrap/Table';
 import {useEffect, useState} from "react";
 import {fetchAllCourses} from "../../services/CourseService";
 import ReactPaginate from "react-paginate";
+import ModalRegis from "./ModalRegis";
 
 const TableCourses = (props) => {
     const [listCourses, setListCourses] = useState([]);//Lấy danh sách khóa học
     const [totalPages, setTotalPages] = useState(0);
+    const [isShowModalRegis,setIsShowModalRegis] = useState(false)
+    const [dataRegisCourse,setDataRegisCourse] = useState({});
     const getListCourses = async (page) => {
        const res = await fetchAllCourses(page);
-       console.log(">>>>> Check course",res.data);
+       // console.log(">>>>> Check course",res.data);
        if (res){
            setTotalPages(res.totalPages)
            setListCourses(res.data);
@@ -22,6 +25,15 @@ const TableCourses = (props) => {
         getListCourses(1);
     }, [])
 
+    const handleRegisCourse = (course) => {
+        setDataRegisCourse(course)
+        // console.log(">>>>> Check Data:",course);
+      setIsShowModalRegis(true);
+    }
+    const handleClose = () =>{
+
+        setIsShowModalRegis(false);
+    }
     return (
         <>
             <div className=" my-3 add-new">
@@ -42,13 +54,14 @@ const TableCourses = (props) => {
                 <tbody>
                 {listCourses && listCourses.length > 0 &&
                    listCourses.map((item, index) => {
-                        return (
+
+                       return (
                             <tr key={`courses-${index}`}>
                                 <td>{item.id}</td>
                                 <td>{item.name}</td>
                                 <td>{item.description}</td>
                                 <td>
-                                    <button className='btn-warning mx-3 my-1'>Registration</button>
+                                    <button className='btn-warning mx-3 my-1' onClick={() => handleRegisCourse(item)}>Registration</button>
                                     <button className='btn-danger'>Record</button>
                                 </td>
                             </tr>
@@ -76,6 +89,12 @@ const TableCourses = (props) => {
                 containerClassName="pagination"
                 activeClassName="active"
             />
+            <ModalRegis
+                show={isShowModalRegis}
+                handleClose={handleClose}
+                dataRegisCourse={dataRegisCourse}
+            />
+
 
         </>);
 }

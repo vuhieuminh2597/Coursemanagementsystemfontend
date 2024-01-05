@@ -5,7 +5,7 @@ const fetchAllCourses = (page) => {
 }
 
 const registrationCourse = (idUser,idCourse) => {
-    return axios.get(`/api/v1/customer/${idUser}/course/${idCourse}`);
+    return axios.put(`/api/v1/customer/${idUser}/course/${idCourse}`);
 }
 
 export {fetchAllCourses,registrationCourse}
